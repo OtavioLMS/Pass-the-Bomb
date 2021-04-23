@@ -1,0 +1,225 @@
+<head>
+    <title>Fala Tatá</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <script src="https://kit.fontawesome.com/392b5e6f24.js" crossorigin="anonymous"></script>
+    <script language="javascript" src="RECURSOS/p5.min.js"></script>
+    <script language="javascript" src="RECURSOS/sketch.js"></script>
+    <script language="javascript" src="RECURSOS/funcoes_auxiliares.js"></script>
+    
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:800&display=swap" rel="stylesheet">
+
+    <link href="RECURSOS/animacoes.css" rel="stylesheet">
+    <link href="RECURSOS/estilos.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+    <div id="configuracoes" class="modal">
+        <h2>CONFIGURAÇÕES</h2>
+        <div class="opcao">
+            <p class="label_opcao">TEMPO MÍNIMO</p>
+            <p id="lblValMin" class="label_value">20</p>
+            <input type="range" min="10" max="60" value="20" class="slider" id="sldValMin">
+        </div>
+        <div class="opcao">
+            <p class="label_opcao">TEMPO MÁXIMO</p>
+            <p id="lblValMax" class="label_value">40</p>
+            <input type="range" min="10" max="60" value="40" class="slider" id="sldValMax">
+        </div>
+        <div class="opcao">
+            <p class="label_opcao">DELAY PARA PRÓXIMA</p>
+            <p id="lblValDelay" class="label_value">15</p>
+            <input type="range" min="3" max="15" value="15" class="slider" id="sldValDelay">
+        </div>
+        <!-- <div class="opcao">
+            <p class="label_opcao">PRÓXIMA AUTOMÁTICA</p>
+            <p id="lblValMin3" class="label_value">3458</p>
+            <input type="range" min="0" max="1" value="1" class="slider" id="myRange3">
+        </div> -->
+    </div>
+    
+    <div id="relatorios" class="modal esconder">
+        <h2>SÍLABAS ANTERIORES</h2>
+        <ul id="lstSilabasAnteriores">
+        </ul>
+    </div>
+
+    <div id="card" class="floating">
+        <div id="card_front" class="card_side"><p class="p_silaba" id="silaba_front"></p></div>
+        <div id="card_back" class="card_side"><p class="p_silaba" id="silaba_back"></p></div>
+    </div>
+
+    <div>
+        <p class="interface labelInterface" id="tempoRestante">---------</p>
+    </div>
+
+    <button id="btnSortear" onclick="proximaCarta()">
+        SORTEAR
+        <div id="circulo_icone">
+            <i class="fas fa-dice" style="margin-right: 20px;"></i>
+        </div>
+    </button>
+
+
+    <div id="botoesInterface">
+        <button id="btnFullScreen" class="interface botaoInterface" onclick="definirTelaCheia()">
+            <i class="fas fa-expand-alt"></i>
+        </button>
+        <button id="btnConfiguracoes" class="interface botaoInterface" onclick="trocarConfiguracoes()">
+            <i class="fas fa-cog"></i>
+        </button>
+        <button id="btnRelatorio" class="interface botaoInterface" onclick="trocarRelatorio()">
+            <i class="fas fa-stream"></i>
+        </button>
+        <button id="btnMudo" class="interface botaoInterface" onclick="trocarMudo()">
+            <!-- <i class="fas fa-volume-up"></i> -->
+            <i class="fas fa-volume-mute"></i>
+        </button>
+    </div>
+    
+    <script type="text/javascript">
+        let inicio,
+        tempoTotal,
+        running = false,
+        explodindo = false,
+        telaCheia = false,
+        som,
+        configuracoes = true,
+        relatorio = false,
+        silabasAnteriores = [],
+        tempoMin,
+        tempoMax,
+        tempoDelay,
+        mudo = true
+
+        document.getElementById("sldValMin").oninput = function() {
+            document.getElementById("lblValMin").innerHTML = this.value;
+            tempoMin = this.value
+        }
+        
+        document.getElementById("sldValMax").oninput = function() {
+            document.getElementById("lblValMax").innerHTML = this.value;
+            tempoMax = this.value
+        }
+        
+        document.getElementById("sldValDelay").oninput = function() {
+            document.getElementById("lblValDelay").innerHTML = this.value;
+            tempoDelay = this.value
+        }
+
+
+        function proximaCarta(){
+            fecharConfiguracoes()
+            fecharRelatorio()
+            tempoMin = document.getElementById("sldValMin").value
+            tempoMax = document.getElementById("sldValMax").value
+            
+            document.getElementById('card').className ='flip'
+            document.getElementById("btnSortear").disabled = true;
+            
+            let silabaAtual = ''
+            do{
+                silabaAtual = sortearSilaba().toUpperCase()
+            } while (silabasAnteriores.includes(silabaAtual))
+            silabasAnteriores.push(silabaAtual)
+            
+            let lista = document.getElementById("lstSilabasAnteriores")
+            let htmlLista = ''
+            for(silaba of silabasAnteriores){
+                htmlLista += '<li>' + silaba + '</li>'
+            }
+            lista.innerHTML = htmlLista
+            
+            explodindo = false
+            running = true
+            inicio = Date.now()
+            tempoTotal = floor(random(tempoMin * 1000, tempoMax * 1000))
+            
+            
+            document.getElementById('silaba_back').innerHTML = silabaAtual
+            
+            setTimeout(() => {
+                document.getElementById('card_front').style.backgroundImage = "url('RECURSOS/card.png')"
+                document.getElementById("btnSortear").disabled = false;
+                document.getElementById('card').classList.remove('flip')
+                document.getElementById('silaba_front').innerHTML = silabaAtual
+                console.log('TIMEOUT - ACABOU A FESTA');
+            }, tempoTotal)
+        }
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            background(color('#2c3e50'));
+            som = new sound("RECURSOS/explosao.mp3");
+        }
+        
+        function draw() {
+            background(color('#2c3e50'));
+            tempoDelay = document.getElementById("sldValDelay").value * 1000
+            if(explodindo){
+                push()
+                translate(windowWidth / 2, windowHeight / 2)
+                rotate(-HALF_PI)
+                ellipseMode(CENTER)
+                noStroke()
+                
+                let tempo = Date.now()
+                size = map(tempo, inicio, inicio + 400, 50, innerWidth/2)
+                
+                fill(color('#f1c40f'))
+                ellipse(0, 0, size, size)
+                
+                fill(color('#c0392b'))
+                ellipse(0, 0, size - (size * 0.7), size - (size * 0.7))
+                pop()
+            }
+            
+            if(running){
+                let tempo = Date.now();
+                let tempoRestante = floor((tempoTotal - (tempo - inicio))/1000);
+                document.getElementById("tempoRestante").innerHTML = tempoRestante + ' segs'
+                
+                let porcentagemTempo = map(tempo, inicio, (inicio + tempoTotal), 0, TWO_PI, true)
+                if(porcentagemTempo >= TWO_PI){
+                    inicio = tempo
+                    explodindo = true
+                    running = false
+                    console.log('ACABOU O TEMPO!');
+                    document.getElementById('silaba_front').innerHTML = ''
+                    document.getElementById('card').className = 'explodiu'
+                    document.getElementById('card_front').style.backgroundImage = "url('RECURSOS/explodiu.png')"
+                    document.getElementById("tempoRestante").innerHTML = '---------'
+                    if(!mudo){
+                        som.play();
+                    }
+                    setTimeout(() => {
+                        proximaCarta()
+                    }, tempoDelay)
+                }
+                
+                push()
+                translate(windowWidth / 2, windowHeight / 2);
+                rotate(-HALF_PI)
+                ellipseMode(CENTER);
+                noStroke()
+                fill(color('#e74c3c'))
+                let size = 1600 + Math.sin(Date.now() * 0.002 + 3) * 50;
+                arc(0, 0, size, size, 0, porcentagemTempo);
+                fill(color('#c0392b'))
+                size = 1200 + Math.sin(Date.now() * 0.002 + 2) * 50;
+                arc(0, 0, size, size, 0, porcentagemTempo);
+                fill(color('#e74c3c'))
+                size = 900 + Math.sin(Date.now() * 0.002 + 1) * 50;
+                arc(0, 0, size, size, 0, porcentagemTempo);
+                fill(color('#c0392b'))
+                size = 500 + Math.sin(Date.now() * 0.002) * 50;
+                arc(0, 0, size, size, 0, porcentagemTempo);
+                pop()
+            }
+
+        }
+
+    </script>
+</body>

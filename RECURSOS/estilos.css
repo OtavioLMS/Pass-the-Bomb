@@ -1,0 +1,446 @@
+
+* {
+    transition-duration: 200ms;
+    font-family: 'Catamaran', sans-serif;
+    vertical-align: middle;
+    text-align: center;
+    background-size: cover;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
+}
+
+canvas {
+    transition-duration: 0ms !important;
+}
+
+body {
+    padding: 0;
+    margin: 0px;
+    overflow: auto;
+    perspective: 1000px;
+}
+
+canvas {
+    left: -50px;
+    right: -50px;
+    top: -50px;
+    bottom: -50px;
+}
+
+button:focus {
+    outline: none;
+}
+
+#card {
+    height: 300px;
+    width: 200px;
+    /* background: #ecf0f1; */
+    background-image: url(card.png);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
+    border-radius: 20px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: -150px;
+    transform-style: preserve-3d;
+}
+
+.floating {
+    animation-fill-mode: forwards;
+    animation-name: floating_card;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+
+.explodiu {
+    transform: rotateZ(-20deg);
+    background-image: url(explodiu.png);
+    animation-fill-mode: forwards;
+    animation-name: explodiu;
+    animation-duration: 400ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+
+.flip {
+    animation-fill-mode: forwards;
+    animation-name: flip_card;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in;
+}
+
+.card_side {
+    /* border-radius: 10px; */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+#card_front {
+    /* background: red; */
+    background-image: url(card_pausado.png);
+}
+
+#card_back {
+    /* background: blue; */
+    background-image: url(card.png);
+    transform: rotateY(180deg);
+}
+
+#btnSortear {
+    position: absolute;
+    height: 60px;
+    width: 260px;
+    bottom: 35px;
+    left: 50%;
+    line-height: 60px;
+    margin-left: -130px;
+    padding: 0px;
+    background: #ecf0f1;
+    border: none;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
+    font-size: 30px;
+    color: #34495e;
+}
+
+#btnSortear:hover {
+    background: #ecf0f1;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.35);
+    border-radius: 14px;
+    width: 280px;
+    margin-left: -140px;
+    bottom: 33px;
+    height: 66px;
+    line-height: 66px;
+    font-size: 32px;
+}
+
+#btnSortear:active {
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.35);
+    background: #95a5a6;
+    border-radius: 10px;
+    line-height: 60px;
+    width: 270px;
+    margin-left: -135px;
+    height: 60px;
+    bottom: 36px;
+    font-size: 28px;
+}
+
+#circulo_icone {
+    background: #f1c40f;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+    line-height: 50px;
+    border-radius: 0 10px 10px 0;
+    width: 20px;
+    height: 60px;
+    /* opacity: 0; */
+    display: block;
+    float: right;
+    text-align: center;
+    transition-duration: 100ms;
+}
+
+#btnSortear:hover #circulo_icone {
+    width: 80px;
+    height: 66px;
+}
+
+#btnSortear:active #circulo_icone {
+    margin-top: -50px;
+    margin-right: -20px;
+    opacity: 100;
+    border-radius: 100px;
+
+    width: 80px;
+    height: 80px;
+
+    animation-fill-mode: forwards;
+    animation-name: explodiu;
+    animation-duration: 300ms;
+    animation-delay: 100ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+
+.fa-dice {
+    font-size: 0px;
+    margin-top: 33px;
+    transition-duration: 200ms;
+    color: #bdc3c7;
+}
+
+#btnSortear:hover .fa-dice {
+    font-size: 40px;
+    margin-top: 12px;
+    margin-left: 11px;
+    color: #ecf0f1;
+}
+
+#btnSortear:active .fa-dice {
+    font-size: 46px;
+    margin-top: 11px;
+    margin-left: 11px;
+    color: #ecf0f1;
+}
+
+#btnSortear:disabled {
+    color: #bdc3c7;
+}
+
+#btnSortear:disabled #circulo_icone {
+    background: #bdc3c7;
+}
+
+#botoesInterface {
+    position: absolute;
+    height: auto;
+    width: auto;
+    top: 10px;
+    left: 10px;
+    float: left;
+    padding: 4px;
+    font-size: 20px;
+    color: #ecf0f1;
+    transition-duration: 100ms;
+}
+
+.botaoInterface {
+    height: 30px;
+    width: 30px;
+    display: block;
+    float: left;
+    margin-left: 5px;
+    font-size: 20px;
+    transition-duration: 100ms;
+}   
+
+.botaoInterface:hover {
+    height: 36px;
+    width: 36px;
+    margin-top: -3px;
+    margin-left: 1px;
+    margin-right: -2px;
+    padding: 2px;
+    border: 2px solid #ecf0f1;
+    font-size: 26px;
+}
+
+.botaoInterface:active {
+    height: 32px;
+    width: 32px;
+    margin-top: -1px;
+    margin-left: 4px;
+    margin-right: -1px;
+    padding: 2px;
+    border: 3px solid #ecf0f1;
+    font-size: 20px;
+    background: #34495e;
+}
+
+.botaoInterface .fas{
+    transition: none !important;
+}
+
+
+.p_silaba {
+    color: #ecf0f1;
+    font-size: 90px;
+    line-height: 260px;
+}
+
+#explosion {
+    width: 100%;
+    height: 100%;
+
+    top: 50%;
+    left: 50%;
+    /* margin-left: -100px;
+    margin-top: -150px; */
+
+    background: #e74c3c;
+
+    z-index: 99;
+    position: fixed;
+
+    animation-fill-mode: forwards;
+    animation-name: explode;
+    animation-duration: 200ms;
+    animation-timing-function: ease-in;
+}
+
+.modal {
+    width: auto;
+    height: auto;
+    padding: 15px 4px 10px 10px;
+    background: #ecf0f1d0;
+    border: 2px solid #ecf0f1;
+    border-radius: 0 10px 10px 0;
+    position: absolute;
+    z-index: 99;
+}
+
+h2 {
+    color: #7f8c8d;
+    margin-top: -8px;
+    margin-bottom: 6px;
+    font-size: 24px;
+}
+
+#configuracoes {
+    top: 60px;
+    left: -3px;
+    width: 330px;
+    z-index: 100;
+    color: #34495e;
+}
+
+.slidecontainer {
+    display: block;
+    width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    overflow: hidden;
+    -webkit-appearance: none;
+    appearance: none;
+    float: right;
+    margin: 0px;
+    margin-right: 5px;
+    margin-left: 5px;
+    width: 120px;
+    height: 24px;
+    outline: none;
+    opacity: 0.7;
+    background: #ecf0f1;
+    /* border: 1px solid #7f8c8d; */
+    border-radius: 12px;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-image: url(slider.png);
+    cursor: pointer;
+    box-shadow: -110px 0 0 110px#e74c3c;
+}
+
+.slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    background-size: cover;
+    background-image: url(slider.png);
+    cursor: pointer;
+}
+
+.opcao {
+    display: inline-block;
+    width: 100%;
+    height: 24px;
+    padding: 0px;
+    margin: 2px 0px;
+}
+
+.label_opcao {
+    margin: 0px;
+    display: block;
+    float: left;
+    height: 24px;
+}
+
+.label_value {
+    display: block;
+    float: right;
+    width: 20px;
+    text-align: left;
+    margin-left: 2px;
+    margin-right: 0px;
+    margin-top: 0;
+}
+
+.interface {
+    padding: 4px;
+    background: none;
+    border: 1px solid #ecf0f1;
+    border-radius: 10px;
+    color: #ecf0f1;
+}
+
+.labelInterface {
+    display: block;
+    float: right;
+    position: absolute;
+    right: 10px;
+    width: 100px;
+    height: 30px;
+    padding: 0;
+    font-size: 22px;
+    line-height: 26px;
+}
+
+.esconder {
+    display: none;
+}
+
+#relatorios {
+    top: 60px;
+    left: -3px;
+    width: 280px;
+    color: #34495e;
+}
+
+#relatorios ul {
+    max-height: 300px;
+    min-height: 100px;
+    overflow-y: scroll;
+}
+
+#relatorios li {
+    margin: 0;
+    padding: 0;
+    margin-top: 0px;
+    margin-bottom: -5px;
+    text-align: left;
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #ecf0f155;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ecf0f1;
+    border-radius: 10px;
+}
